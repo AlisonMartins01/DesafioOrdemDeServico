@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
+  <PropertyGroup Label="Globals">
+    <DockerTargetOS>Linux</DockerTargetOS>
+	<PlatformTarget>x64</PlatformTarget>
+    <DockerPublishLocally>False</DockerPublishLocally>
+    <ProjectVersion>2.1</ProjectVersion>
+    <ProjectGuid>1badd0ce-30a4-416b-a7bd-c3fe2a48aab0</ProjectGuid>
+    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
+    <DockerServiceName>OsService.ApiService</DockerServiceName>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="docker-compose.override.yml">
+      <DependentUpon>docker-compose.yml</DependentUpon>
+    </None>
+    <None Include="docker-compose.yml" />
+  </ItemGroup>
+</Project>
