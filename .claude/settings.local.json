@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(dir /s /b \"C:\\\\Users\\\\aliso\\\\source\\\\repos\\\\TestePJ\\\\ControleOrdemDeServico 3\\\\ControleOrdemDeServico\")",
-      "Bash(cmd /c \"dir /s /b \"\"C:\\\\Users\\\\aliso\\\\source\\\\repos\\\\TestePJ\\\\ControleOrdemDeServico 3\\\\ControleOrdemDeServico\"\" | findstr /i clidriver\")"
-    ]
-  }
-}
