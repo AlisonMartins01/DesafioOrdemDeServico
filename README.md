@@ -299,20 +299,7 @@ dotnet test
 - Repository pattern permite test doubles
 - WebApplicationFactory para testes end-to-end
 - Database cleanup automático entre testes
-
-## Próximos Passos (Sugestões)
-
-- [ ] Autenticação/Autorização (JWT com refresh tokens)
-- [ ] Cache distribuído (Redis) para queries de leitura
-- [ ] Domain Events + MediatR notifications
-- [ ] API Versioning (Asp.Versioning.Mvc)
-- [ ] Rate Limiting (ASP.NET Core middleware)
-- [ ] Background Jobs (Hangfire para processamento assíncrono)
-- [ ] CQRS completo com read models separados
-- [ ] Monitoring/APM (Application Insights ou Grafana)
-
 ---
 
 **Stack:** .NET 10.0 | SQL Server 2022 | Dapper | FluentMigrator | MediatR
-**Desenvolvido como:** Avaliação técnica para posição .NET Sênior
-**Data:** Janeiro 2026
+**Desenvolvido por:** Alison Pereira Martins
