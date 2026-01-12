@@ -146,7 +146,7 @@ ControleOrdemDeServico/
 |----------|-----------|
 | `0001_CreateCustomersTable` | Customers com filtered unique indexes em Document/Phone |
 | `0002_CreateServiceOrdersTable` | ServiceOrders com auto-increment (seed: 1000), FK para Customers |
-| `0003_CreateAttachmentsTable` | Metadados de fotos (Before/After) |
+| `0003_CreateServiceOrderAttachmentsTable` | Metadados de fotos (Before/After) |
 | `0004_AddPerformanceIndexes` | Covering indexes para otimização de queries |
 
 ### Execução Automática
@@ -254,7 +254,12 @@ dotnet test
 - OpenedAt, StartedAt, FinishedAt: `DateTimeOffset`
 - Attachments: `List<Attachment>`
 
-**Attachment**
+**ServiceOrderStatus**
+- Open = `1`
+- InProgress = `2`
+- Finished = `3`
+
+  **Attachment**
 - ID: `Guid`
 - ServiceOrderId: `Guid` (FK)
 - Type: `AttachmentType` (Before/After)
