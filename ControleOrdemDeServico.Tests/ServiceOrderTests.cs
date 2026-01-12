@@ -16,7 +16,6 @@ public class ServiceOrderTests : ApiTestBase
     [Fact]
     public async Task OpenServiceOrder_ForExistingCustomer_Returns201Created()
     {
-        // Arrange
         var customerId = await CreateTestCustomer();
         var serviceOrder = new
         {
@@ -24,10 +23,8 @@ public class ServiceOrderTests : ApiTestBase
             Description = "Instalação de ar condicionado"
         };
 
-        // Act
         var response = await PostAsync("/v1/service-orders", serviceOrder);
 
-        // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         var result = await response.Content.ReadFromJsonAsync<ServiceOrderCreateResponse>();
@@ -39,24 +36,20 @@ public class ServiceOrderTests : ApiTestBase
     [Fact]
     public async Task OpenServiceOrder_ForNonExistentCustomer_Returns404NotFound()
     {
-        // Arrange
         var serviceOrder = new
         {
             CustomerId = Guid.NewGuid(),
             Description = "Instalação de ar condicionado"
         };
 
-        // Act
         var response = await PostAsync("/v1/service-orders", serviceOrder);
 
-        // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
     public async Task OpenServiceOrder_WithEmptyDescription_Returns400BadRequest()
     {
-        // Arrange
         var customerId = await CreateTestCustomer();
         var serviceOrder = new
         {
@@ -64,17 +57,14 @@ public class ServiceOrderTests : ApiTestBase
             Description = ""
         };
 
-        // Act
         var response = await PostAsync("/v1/service-orders", serviceOrder);
 
-        // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
     public async Task GetServiceOrder_AfterCreation_ReturnsStatusOpen()
     {
-        // Arrange
         var customerId = await CreateTestCustomer();
         var serviceOrder = new
         {
@@ -82,15 +72,12 @@ public class ServiceOrderTests : ApiTestBase
             Description = "Manutenção preventiva"
         };
 
-        // Act - Create
         var createResponse = await PostAsync("/v1/service-orders", serviceOrder);
         var created = await createResponse.Content.ReadFromJsonAsync<ServiceOrderCreateResponse>();
 
-        // Act - Get
         var getResponse = await Client.GetAsync($"/v1/service-orders/{created!.Id}");
         var retrieved = await getResponse.Content.ReadFromJsonAsync<ServiceOrderResponse>();
 
-        // Assert
         Assert.NotNull(retrieved);
         Assert.Equal(0, retrieved.Status); // Open = 0
         Assert.Equal(serviceOrder.Description, retrieved.Description);

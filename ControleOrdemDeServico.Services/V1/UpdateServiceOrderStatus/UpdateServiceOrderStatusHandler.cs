@@ -27,10 +27,8 @@ public sealed class UpdateServiceOrderStatusHandler(
 
         try
         {
-            // Use entity method - all business rules and validations inside
             serviceOrder.ChangeStatus(request.NewStatus);
 
-            // Persist changes
             await serviceOrders.UpdateStatusAsync(
                 request.ServiceOrderId,
                 serviceOrder.Status,

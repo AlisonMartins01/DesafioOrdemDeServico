@@ -16,7 +16,6 @@ public sealed class CreateCustomerHandler(
 
         try
         {
-            // Check for duplicate document
             if (!string.IsNullOrWhiteSpace(request.Document))
             {
                 var existingByDocument = await repo.GetByDocumentAsync(request.Document.Trim(), ct);
@@ -27,7 +26,6 @@ public sealed class CreateCustomerHandler(
                 }
             }
 
-            // Check for duplicate phone
             if (!string.IsNullOrWhiteSpace(request.Phone))
             {
                 var existingByPhone = await repo.GetByPhoneAsync(request.Phone.Trim(), ct);
@@ -38,7 +36,6 @@ public sealed class CreateCustomerHandler(
                 }
             }
 
-            // Use entity factory method - all validations inside
             var customer = CustomerEntity.Create(
                 name: request.Name,
                 phone: request.Phone,

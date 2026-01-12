@@ -11,7 +11,6 @@ Sistema de gerenciamento de ordens de serviço implementando DDD, CQRS e padrõe
 | **Migrations** | FluentMigrator | Controle total sobre SQL, compatível com Dapper |
 | **Database** | SQL Server 2022 | Índices avançados, filtered indexes |
 | **Messaging** | MediatR | CQRS pattern (commands/queries) |
-| **Observability** | OpenTelemetry + Aspire | Distributed tracing, metrics |
 | **Testing** | xUnit v3 + WebApplicationFactory | Testes de integração com DB real |
 | **API Docs** | Scalar | OpenAPI UI moderno |
 
@@ -94,25 +93,7 @@ docker-compose up
 - Password: `SqlServer2024!Strong#` (definido em `Infra/.env`)
 - Database: `OsServiceDb`
 
-### Opção 2: .NET Aspire (Desenvolvimento com Observabilidade)
-
-```bash
-cd ControleOrdemDeServico.AppHost
-dotnet run
-```
-
-**Acesso:**
-- Aspire Dashboard: `http://localhost:15241` (logs, traces, métricas)
-- API: endpoint exibido no dashboard
-- SQL Server: orquestrado automaticamente
-
-**Benefícios:**
-- Distributed tracing com OpenTelemetry
-- Visualização de logs em tempo real
-- Service discovery automático
-- Ideal para desenvolvimento de microservices
-
-### Opção 3: Local (F5 no Visual Studio/Rider)
+### Opção 2: Local (F5 no Visual Studio/Rider)
 
 **Requisitos:**
 - SQL Server local rodando OU Docker SQL Server
@@ -131,7 +112,6 @@ dotnet run
 
 ```
 ControleOrdemDeServico/
-├── ControleOrdemDeServico.AppHost/           # .NET Aspire orchestration
 ├── ControleOrdemDeServico.ApiService/        # Minimal API endpoints
 │   ├── Endpoints/
 │   ├── Program.cs                            # DI, migrations, middleware
@@ -149,7 +129,6 @@ ControleOrdemDeServico/
 │   │   ├── 0003_CreateAttachmentsTable.cs
 │   │   └── 0004_AddPerformanceIndexes.cs
 │   └── Repositories/ (Dapper-based)
-├── ControleOrdemDeServico.ServiceDefaults/   # Shared Aspire config
 ├── ControleOrdemDeServico.Tests/             # Integration tests (xUnit v3)
 └── Infra/
     ├── docker-compose.yml                    # API + SQL Server
@@ -334,6 +313,6 @@ dotnet test
 
 ---
 
-**Stack:** .NET 10.0 | SQL Server 2022 | Dapper | FluentMigrator | MediatR | Aspire
+**Stack:** .NET 10.0 | SQL Server 2022 | Dapper | FluentMigrator | MediatR
 **Desenvolvido como:** Avaliação técnica para posição .NET Sênior
 **Data:** Janeiro 2026

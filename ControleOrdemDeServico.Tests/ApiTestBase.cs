@@ -18,23 +18,18 @@ public class ApiTestBase : IAsyncLifetime
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Register TestDatabaseHelper for test cleanup
                     services.AddScoped<TestDatabaseHelper>();
 
-                    // Tests will use the configured database with FluentMigrator
-                    // Migrations are automatically run by Program.cs on application startup
                 });
             });
 
         Client = Factory.CreateClient();
 
-        // Clear all tables before each test to ensure clean state
         using var scope = Factory.Services.CreateScope();
         var testHelper = scope.ServiceProvider.GetRequiredService<TestDatabaseHelper>();
         await testHelper.ClearAllTablesAsync(CancellationToken.None);
     }
 
-    // Explicit interface implementations for xUnit v3
     async ValueTask IAsyncLifetime.InitializeAsync() => await InitializeAsync();
 
     ValueTask IAsyncDisposable.DisposeAsync()

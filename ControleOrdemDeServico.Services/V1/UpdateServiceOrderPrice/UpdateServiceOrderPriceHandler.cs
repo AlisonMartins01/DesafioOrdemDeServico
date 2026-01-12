@@ -13,10 +13,8 @@ public sealed class UpdateServiceOrderPriceHandler(IServiceOrderRepository servi
         if (serviceOrder is null)
             throw new KeyNotFoundException("Service order not found.");
 
-        // Use entity method - all business rules and validations inside
         serviceOrder.UpdatePrice(request.Price);
 
-        // Persist changes
         await serviceOrders.UpdatePriceAsync(
             request.ServiceOrderId,
             serviceOrder.Price!.Value,

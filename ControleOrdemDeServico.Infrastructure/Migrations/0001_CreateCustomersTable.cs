@@ -2,12 +2,6 @@ using FluentMigrator;
 
 namespace OsService.Infrastructure.Migrations;
 
-/// <summary>
-/// Migration 0001: Create Customers table
-///
-/// Creates the main Customers table with all required columns and constraints.
-/// Includes unique constraints on Document and Phone to prevent duplicates.
-/// </summary>
 [Migration(20260111001)]
 public class CreateCustomersTable : Migration
 {
@@ -21,8 +15,6 @@ public class CreateCustomersTable : Migration
             .WithColumn("Document").AsString(20).Nullable()
             .WithColumn("CreatedAt").AsDateTime().NotNullable();
 
-        // Unique filtered indexes (SQL Server specific feature for partial uniqueness)
-        // Uses raw SQL because FluentMigrator doesn't support filtered indexes in fluent API
         Execute.Sql(@"
             CREATE UNIQUE INDEX IX_Customers_Document
             ON dbo.Customers(Document)

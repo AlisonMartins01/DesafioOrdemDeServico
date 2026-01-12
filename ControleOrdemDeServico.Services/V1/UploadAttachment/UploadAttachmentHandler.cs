@@ -15,48 +15,39 @@ public sealed class UploadAttachmentHandler(
 
     public async Task<Guid> Handle(UploadAttachmentCommand request, CancellationToken ct)
     {
-        // Validate service order exists
         var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, ct);
         if (serviceOrder is null)
             throw new KeyNotFoundException("Service order not found.");
 
-        // Validate content type
         if (!AllowedContentTypes.Contains(request.ContentType.ToLowerInvariant()))
             throw new ArgumentException("Only JPEG and PNG images are allowed.");
 
-        // Validate file extension
         var extension = Path.GetExtension(request.FileName).ToLowerInvariant();
         if (!AllowedExtensions.Contains(extension))
             throw new ArgumentException("Only .jpg, .jpeg, and .png file extensions are allowed.");
 
-        // Validate file size
         if (request.SizeBytes > MaxFileSizeBytes)
             throw new ArgumentException($"File size cannot exceed {MaxFileSizeBytes / 1024 / 1024}MB.");
 
         if (request.SizeBytes <= 0)
             throw new ArgumentException("File is empty.");
 
-        // Sanitize filename
         var sanitizedFileName = SanitizeFileName(request.FileName);
 
-        // Generate unique storage path
         var attachmentId = Guid.NewGuid();
         var storagePath = GenerateStoragePath(request.ServiceOrderId, attachmentId, extension);
 
-        // Ensure upload directory exists
         var uploadDirectory = Path.GetDirectoryName(storagePath);
         if (!string.IsNullOrEmpty(uploadDirectory))
         {
             Directory.CreateDirectory(uploadDirectory);
         }
 
-        // Save file to disk
         await using (var fileStream = new FileStream(storagePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, useAsync: true))
         {
             await request.FileStream.CopyToAsync(fileStream, ct);
         }
 
-        // Create attachment record
         var attachment = new ServiceOrderAttachment
         {
             Id = attachmentId,

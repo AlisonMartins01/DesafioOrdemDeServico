@@ -7,20 +7,10 @@
   </Folder>
   <Folder Name="/src/">
     <File Path="README.md" />
-    <Project Path="ControleOrdemDeServico.ServiceDefaults\OsService.ServiceDefaults.csproj" />
-    <Project Path="ControleOrdemDeServico.AppHost\OsService.AppHost.csproj" />
-  </Folder>
-  <Folder Name="/src/Apis/">
     <Project Path="ControleOrdemDeServico.ApiService\OsService.ApiService.csproj" />
-  </Folder>
-  <Folder Name="/src/Data/">
     <Project Path="ControleOrdemDeServico.Infrastructure\OsService.Infrastructure.csproj" />
-  </Folder>
-  <Folder Name="/src/Services/">
     <Project Path="ControleOrdemDeServico.Domain\OsService.Domain.csproj" />
     <Project Path="ControleOrdemDeServico.Services\OsService.Services.csproj" />
-  </Folder>
-  <Folder Name="/src/Test/">
     <Project Path="ControleOrdemDeServico.Tests\OsService.Tests.csproj" />
   </Folder>
 </Solution>

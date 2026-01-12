@@ -4,7 +4,6 @@ namespace OsService.Domain.Entities;
 
 public sealed class ServiceOrderEntity
 {
-    // Private constructor - force use of factory method
     private ServiceOrderEntity() { }
 
     public Guid Id { get; private set; }
@@ -19,9 +18,6 @@ public sealed class ServiceOrderEntity
     public string? Coin { get; private set; }
     public DateTime? UpdatedPriceAt { get; private set; }
 
-    /// <summary>
-    /// Factory method to create a new Service Order
-    /// </summary>
     public static ServiceOrderEntity Open(Guid customerId, string description)
     {
         if (customerId == Guid.Empty)
@@ -45,9 +41,6 @@ public sealed class ServiceOrderEntity
         };
     }
 
-    /// <summary>
-    /// Start service order execution
-    /// </summary>
     public void Start()
     {
         if (Status != ServiceOrderStatus.Open)
@@ -57,9 +50,6 @@ public sealed class ServiceOrderEntity
         StartedAt = DateTime.UtcNow;
     }
 
-    /// <summary>
-    /// Finish service order
-    /// </summary>
     public void Finish()
     {
         if (Status != ServiceOrderStatus.InProgress)
@@ -72,9 +62,6 @@ public sealed class ServiceOrderEntity
         FinishedAt = DateTime.UtcNow;
     }
 
-    /// <summary>
-    /// Update service order price
-    /// </summary>
     public void UpdatePrice(decimal price, string? coin = "BRL")
     {
         if (Status == ServiceOrderStatus.Finished)
@@ -88,12 +75,8 @@ public sealed class ServiceOrderEntity
         UpdatedPriceAt = DateTime.UtcNow;
     }
 
-    /// <summary>
-    /// Change status with validation
-    /// </summary>
     public void ChangeStatus(ServiceOrderStatus newStatus)
     {
-        // Validate transition
         var isValidTransition = (Status, newStatus) switch
         {
             (ServiceOrderStatus.Open, ServiceOrderStatus.InProgress) => true,
@@ -104,7 +87,6 @@ public sealed class ServiceOrderEntity
         if (!isValidTransition)
             throw new InvalidOperationException($"Invalid status transition from {Status} to {newStatus}.");
 
-        // Apply transition
         switch (newStatus)
         {
             case ServiceOrderStatus.InProgress:
@@ -118,9 +100,6 @@ public sealed class ServiceOrderEntity
         }
     }
 
-    /// <summary>
-    /// Reconstitute entity from database (for repository use only)
-    /// </summary>
     public static ServiceOrderEntity Reconstitute(
         Guid id,
         int number,
@@ -150,9 +129,6 @@ public sealed class ServiceOrderEntity
         };
     }
 
-    /// <summary>
-    /// Set number after insertion (called by repository)
-    /// </summary>
     internal void SetNumber(int number)
     {
         if (Number != 0)

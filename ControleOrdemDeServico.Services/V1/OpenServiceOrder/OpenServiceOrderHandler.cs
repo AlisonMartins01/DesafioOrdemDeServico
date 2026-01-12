@@ -17,7 +17,6 @@ public sealed class OpenServiceOrderHandler(
 
         try
         {
-            // Verify customer exists
             var exists = await customers.ExistsAsync(request.CustomerId, ct);
             if (!exists)
             {
@@ -25,7 +24,6 @@ public sealed class OpenServiceOrderHandler(
                 throw new KeyNotFoundException("Customer not found.");
             }
 
-            // Use entity factory method - all validations inside
             var serviceOrder = ServiceOrderEntity.Open(
                 customerId: request.CustomerId,
                 description: request.Description

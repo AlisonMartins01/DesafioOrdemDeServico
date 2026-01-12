@@ -8,9 +8,6 @@ using FluentMigrator.Runner;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults & Aspire client integrations.
-builder.AddServiceDefaults();
-
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(OsService.Services.V1.CreateCustomer.CreateCustomerCommand).Assembly));
 
@@ -21,7 +18,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
 builder.Services.AddScoped<IServiceOrderAttachmentRepository, ServiceOrderAttachmentRepository>();
 
-// FluentMigrator - Professional database migrations
+
 builder.Services.AddFluentMigratorCore()
     .ConfigureRunner(rb => rb
         .AddSqlServer()
@@ -29,19 +26,19 @@ builder.Services.AddFluentMigratorCore()
         .ScanIn(typeof(CreateCustomersTable).Assembly).For.Migrations())
     .AddLogging(lb => lb.AddFluentMigratorConsole());
 
-// Add services to the container.
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 
-// Add controllers
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Run FluentMigrator migrations with retry logic for resilience
+
 var maxRetries = 30;
 var delayBetweenRetries = TimeSpan.FromSeconds(2);
 
@@ -52,7 +49,7 @@ for (int i = 0; i < maxRetries; i++)
         using var scope = app.Services.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-        // Run all pending migrations
+
         runner.MigrateUp();
 
         app.Logger.LogInformation("Database migrations completed successfully");
@@ -72,7 +69,7 @@ for (int i = 0; i < maxRetries; i++)
     }
 }
 
-// Configure the HTTP request pipeline.
+
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
@@ -86,5 +83,5 @@ app.MapControllers();
 
 app.Run();
 
-// Make Program accessible to tests
+
 public partial class Program { }

@@ -4,11 +4,9 @@ namespace OsService.Domain.Entities;
 
 public sealed partial class CustomerEntity
 {
-    // Email validation regex
     [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase)]
     private static partial Regex EmailRegex();
 
-    // Private constructor - force use of factory method
     private CustomerEntity() { }
 
     public Guid Id { get; private set; }
@@ -18,16 +16,12 @@ public sealed partial class CustomerEntity
     public string? Document { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    /// <summary>
-    /// Factory method to create a valid Customer entity with all business rules applied
-    /// </summary>
     public static CustomerEntity Create(
         string name,
         string? phone = null,
         string? email = null,
         string? document = null)
     {
-        // Validate name (required, 2-150 chars)
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name is required and cannot be only whitespace.", nameof(name));
 
@@ -35,12 +29,10 @@ public sealed partial class CustomerEntity
         if (trimmedName.Length < 2 || trimmedName.Length > 150)
             throw new ArgumentException("Name must be between 2 and 150 characters.", nameof(name));
 
-        // Validate and trim phone
         var trimmedPhone = phone?.Trim();
         if (trimmedPhone is not null && trimmedPhone.Length > 30)
             throw new ArgumentException("Phone must be at most 30 characters.", nameof(phone));
 
-        // Validate and trim email
         var trimmedEmail = email?.Trim();
         if (!string.IsNullOrEmpty(trimmedEmail))
         {
@@ -51,7 +43,6 @@ public sealed partial class CustomerEntity
                 throw new ArgumentException("Email format is invalid.", nameof(email));
         }
 
-        // Trim document
         var trimmedDocument = document?.Trim();
         if (trimmedDocument is not null && trimmedDocument.Length > 30)
             throw new ArgumentException("Document must be at most 30 characters.", nameof(document));
@@ -67,9 +58,6 @@ public sealed partial class CustomerEntity
         };
     }
 
-    /// <summary>
-    /// Reconstitute entity from database (for repository use only)
-    /// </summary>
     public static CustomerEntity Reconstitute(
         Guid id,
         string name,
