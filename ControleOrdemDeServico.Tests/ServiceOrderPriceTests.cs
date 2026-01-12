@@ -61,7 +61,7 @@ public class ServiceOrderPriceTests : ApiTestBase
 
         await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 1 });
 
-        var statusUpdate = new { Status = 2 }; // Finished = 2
+        var statusUpdate = new { Status = 3 }; // Finished = 3
         var response = await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", statusUpdate);
 
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
@@ -72,11 +72,11 @@ public class ServiceOrderPriceTests : ApiTestBase
     {
         var serviceOrderId = await CreateTestServiceOrder();
 
-        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 1 });
+        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 2 });
 
         await PutAsync($"/v1/service-orders/{serviceOrderId}/price", new { Price = 200.00m });
 
-        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 2 });
+        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 3 });
 
         var priceUpdate = new { Price = 300.00m };
         var response = await PutAsync($"/v1/service-orders/{serviceOrderId}/price", priceUpdate);

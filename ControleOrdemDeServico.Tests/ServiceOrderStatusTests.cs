@@ -30,29 +30,8 @@ public class ServiceOrderStatusTests : ApiTestBase
     public async Task UpdateStatus_FromOpenToInProgress_Returns200OK()
     {
         var serviceOrderId = await CreateTestServiceOrder();
-        var statusUpdate = new { Status = 1 }; // InProgress = 1
+        var statusUpdate = new { Status = 2 }; // InProgress = 1
 
-        var response = await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", statusUpdate);
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        var getResponse = await Client.GetAsync($"/v1/service-orders/{serviceOrderId}");
-        var serviceOrder = await getResponse.Content.ReadFromJsonAsync<ServiceOrderResponse>();
-        Assert.NotNull(serviceOrder);
-        Assert.Equal(1, serviceOrder.Status);
-        Assert.NotNull(serviceOrder.StartedAt); // StartedAt should be set
-    }
-
-    [Fact]
-    public async Task UpdateStatus_FromInProgressToFinished_Returns200OK()
-    {
-        var serviceOrderId = await CreateTestServiceOrder();
-
-        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 1 });
-
-        await PutAsync($"/v1/service-orders/{serviceOrderId}/price", new { Price = 150.00m });
-
-        var statusUpdate = new { Status = 2 }; // Finished = 2
         var response = await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", statusUpdate);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -61,6 +40,27 @@ public class ServiceOrderStatusTests : ApiTestBase
         var serviceOrder = await getResponse.Content.ReadFromJsonAsync<ServiceOrderResponse>();
         Assert.NotNull(serviceOrder);
         Assert.Equal(2, serviceOrder.Status);
+        Assert.NotNull(serviceOrder.StartedAt); // StartedAt should be set
+    }
+
+    [Fact]
+    public async Task UpdateStatus_FromInProgressToFinished_Returns200OK()
+    {
+        var serviceOrderId = await CreateTestServiceOrder();
+
+        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 2 });
+
+        await PutAsync($"/v1/service-orders/{serviceOrderId}/price", new { Price = 150.00m });
+
+        var statusUpdate = new { Status = 3 }; // Finished = 3
+        var response = await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", statusUpdate);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var getResponse = await Client.GetAsync($"/v1/service-orders/{serviceOrderId}");
+        var serviceOrder = await getResponse.Content.ReadFromJsonAsync<ServiceOrderResponse>();
+        Assert.NotNull(serviceOrder);
+        Assert.Equal(3, serviceOrder.Status);
         Assert.NotNull(serviceOrder.FinishedAt); // FinishedAt should be set
     }
 
@@ -69,11 +69,11 @@ public class ServiceOrderStatusTests : ApiTestBase
     {
         var serviceOrderId = await CreateTestServiceOrder();
 
-        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 1 });
+        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 2 });
 
         await PutAsync($"/v1/service-orders/{serviceOrderId}/price", new { Price = 150.00m });
 
-        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 2 });
+        await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", new { Status = 3 });
 
         var statusUpdate = new { Status = 1 };
         var response = await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", statusUpdate);
@@ -85,7 +85,7 @@ public class ServiceOrderStatusTests : ApiTestBase
     public async Task UpdateStatus_FromOpenToFinished_ReturnsError()
     {
         var serviceOrderId = await CreateTestServiceOrder();
-        var statusUpdate = new { Status = 2 }; // Finished = 2
+        var statusUpdate = new { Status = 3 }; // Finished = 2
 
         var response = await PatchAsync($"/v1/service-orders/{serviceOrderId}/status", statusUpdate);
 

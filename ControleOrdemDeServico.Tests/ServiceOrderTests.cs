@@ -79,7 +79,7 @@ public class ServiceOrderTests : ApiTestBase
         var retrieved = await getResponse.Content.ReadFromJsonAsync<ServiceOrderResponse>();
 
         Assert.NotNull(retrieved);
-        Assert.Equal(0, retrieved.Status); // Open = 0
+        Assert.Equal(1, retrieved.Status); // Open = 0
         Assert.Equal(serviceOrder.Description, retrieved.Description);
     }
 }

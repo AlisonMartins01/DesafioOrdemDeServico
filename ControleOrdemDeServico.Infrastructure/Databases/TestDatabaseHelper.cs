@@ -7,7 +7,7 @@ public class TestDatabaseHelper(IDefaultSqlConnectionFactory connectionFactory)
     public async Task ClearAllTablesAsync(CancellationToken ct = default)
     {
         const string clearSql = """
-DELETE FROM dbo.Attachments;
+DELETE FROM dbo.ServiceOrderAttachments;
 DELETE FROM dbo.ServiceOrders;
 DBCC CHECKIDENT ('dbo.ServiceOrders', RESEED, 999);
 DELETE FROM dbo.Customers;
