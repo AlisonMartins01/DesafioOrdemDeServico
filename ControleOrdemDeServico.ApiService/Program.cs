@@ -17,6 +17,7 @@ builder.Services.AddSingleton<IDefaultSqlConnectionFactory>(_ =>
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
 builder.Services.AddScoped<IServiceOrderAttachmentRepository, ServiceOrderAttachmentRepository>();
+builder.Services.AddSingleton<IDatabaseProvisioner, DatabaseProvisioner>();
 
 
 builder.Services.AddFluentMigratorCore()
@@ -47,8 +48,11 @@ for (int i = 0; i < maxRetries; i++)
     try
     {
         using var scope = app.Services.CreateScope();
-        var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
+        var provisioner = scope.ServiceProvider.GetRequiredService<IDatabaseProvisioner>();
+        await provisioner.EnsureCreatedAsync();
+
+        var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
         runner.MigrateUp();
 

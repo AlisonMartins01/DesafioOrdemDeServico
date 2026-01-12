@@ -11,8 +11,8 @@ public sealed class ServiceOrderAttachmentRepository(IDefaultSqlConnectionFactor
     public async Task InsertAsync(ServiceOrderAttachment attachment, CancellationToken ct)
     {
         const string sql = @"
-INSERT INTO dbo.ServiceOrderAttachments (Id, ServiceOrderId, Type, FileName, ContentType, SizeBytes, StoragePath, UploadedAt)
-VALUES (@Id, @ServiceOrderId, @Type, @FileName, @ContentType, @SizeBytes, @StoragePath, @UploadedAt);";
+INSERT INTO dbo.ServiceOrderAttachments (Id, ServiceOrderId, AttachmentType, FileName, ContentType, FileSizeBytes, StoragePath, UploadedAt)
+VALUES (@Id, @ServiceOrderId, @Type, @FileName, @ContentType, @FileSizeBytes, @StoragePath, @UploadedAt);";
 
         using var conn = factory.Create();
         await conn.ExecuteAsync(new CommandDefinition(sql, new
@@ -22,7 +22,7 @@ VALUES (@Id, @ServiceOrderId, @Type, @FileName, @ContentType, @SizeBytes, @Stora
             Type = (int)attachment.Type,
             attachment.FileName,
             attachment.ContentType,
-            attachment.SizeBytes,
+            attachment.FileSizeBytes,
             attachment.StoragePath,
             attachment.UploadedAt
         }, cancellationToken: ct));
@@ -31,7 +31,7 @@ VALUES (@Id, @ServiceOrderId, @Type, @FileName, @ContentType, @SizeBytes, @Stora
     public async Task<List<ServiceOrderAttachment>> GetByServiceOrderIdAsync(Guid serviceOrderId, CancellationToken ct)
     {
         const string sql = @"
-SELECT Id, ServiceOrderId, Type = CAST(Type AS INT), FileName, ContentType, SizeBytes, StoragePath, UploadedAt
+SELECT Id, ServiceOrderId, AttachmentType = CAST(AttachmentType AS INT), FileName, ContentType, FileSizeBytes, StoragePath, UploadedAt
 FROM dbo.ServiceOrderAttachments
 WHERE ServiceOrderId = @ServiceOrderId
 ORDER BY UploadedAt;";
@@ -44,10 +44,10 @@ ORDER BY UploadedAt;";
         {
             Id = r.Id,
             ServiceOrderId = r.ServiceOrderId,
-            Type = (AttachmentType)(int)r.Type,
+            Type = (AttachmentType)(int)r.AttachmentType,
             FileName = r.FileName,
             ContentType = r.ContentType,
-            SizeBytes = r.SizeBytes,
+            FileSizeBytes = r.FileSizeBytes,
             StoragePath = r.StoragePath,
             UploadedAt = r.UploadedAt
         }).ToList();
@@ -56,7 +56,7 @@ ORDER BY UploadedAt;";
     public async Task<ServiceOrderAttachment?> GetByIdAsync(Guid id, CancellationToken ct)
     {
         const string sql = @"
-SELECT Id, ServiceOrderId, Type = CAST(Type AS INT), FileName, ContentType, SizeBytes, StoragePath, UploadedAt
+SELECT Id, ServiceOrderId, AttachmentType = CAST(AttachmentType AS INT), FileName, ContentType, FileSizeBytes, StoragePath, UploadedAt
 FROM dbo.ServiceOrderAttachments
 WHERE Id = @Id;";
 
@@ -71,10 +71,10 @@ WHERE Id = @Id;";
         {
             Id = result.Id,
             ServiceOrderId = result.ServiceOrderId,
-            Type = (AttachmentType)(int)result.Type,
+            Type = (AttachmentType)(int)result.AttachmentType,
             FileName = result.FileName,
             ContentType = result.ContentType,
-            SizeBytes = result.SizeBytes,
+            FileSizeBytes = result.FileSizeBytes,
             StoragePath = result.StoragePath,
             UploadedAt = result.UploadedAt
         };

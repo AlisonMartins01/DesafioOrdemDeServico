@@ -7,10 +7,10 @@ public class CreateAttachmentsTable : Migration
 {
     public override void Up()
     {
-        Create.Table("Attachments")
+        Create.Table("ServiceOrderAttachments")
             .WithColumn("Id").AsGuid().PrimaryKey("PK_Attachments")
             .WithColumn("ServiceOrderId").AsGuid().NotNullable()
-                .ForeignKey("FK_Attachments_ServiceOrders", "ServiceOrders", "Id")
+                .ForeignKey("FK_ServiceOrderAttachments_ServiceOrders", "ServiceOrders", "Id")
             .WithColumn("FileName").AsString(255).NotNullable()
             .WithColumn("StoragePath").AsString(500).NotNullable()
             .WithColumn("ContentType").AsString(100).NotNullable()
@@ -19,12 +19,12 @@ public class CreateAttachmentsTable : Migration
             .WithColumn("UploadedAt").AsDateTime().NotNullable();
 
         Create.Index("IX_Attachments_ServiceOrderId")
-            .OnTable("Attachments")
+            .OnTable("ServiceOrderAttachments")
             .OnColumn("ServiceOrderId")
             .Ascending();
 
         Create.Index("IX_Attachments_ServiceOrderId_AttachmentType")
-            .OnTable("Attachments")
+            .OnTable("ServiceOrderAttachments")
             .OnColumn("ServiceOrderId")
             .Ascending()
             .OnColumn("AttachmentType")
@@ -33,6 +33,6 @@ public class CreateAttachmentsTable : Migration
 
     public override void Down()
     {
-        Delete.Table("Attachments");
+        Delete.Table("ServiceOrderAttachments");
     }
 }

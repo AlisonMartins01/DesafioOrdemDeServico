@@ -13,7 +13,6 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ControleOrdemDeServico.ApiService/OsService.ApiService.csproj", "ControleOrdemDeServico.ApiService/"]
-COPY ["ControleOrdemDeServico.ServiceDefaults/OsService.ServiceDefaults.csproj", "ControleOrdemDeServico.ServiceDefaults/"]
 COPY ["ControleOrdemDeServico.Services/OsService.Services.csproj", "ControleOrdemDeServico.Services/"]
 COPY ["ControleOrdemDeServico.Domain/OsService.Domain.csproj", "ControleOrdemDeServico.Domain/"]
 COPY ["ControleOrdemDeServico.Infrastructure/OsService.Infrastructure.csproj", "ControleOrdemDeServico.Infrastructure/"]

@@ -55,7 +55,7 @@ public sealed class UploadAttachmentHandler(
             Type = request.Type,
             FileName = sanitizedFileName,
             ContentType = request.ContentType,
-            SizeBytes = request.SizeBytes,
+            FileSizeBytes = request.SizeBytes,
             StoragePath = storagePath,
             UploadedAt = DateTime.UtcNow
         };

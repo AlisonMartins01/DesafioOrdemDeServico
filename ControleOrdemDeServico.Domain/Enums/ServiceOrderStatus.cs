@@ -2,9 +2,8 @@
 
 public enum ServiceOrderStatus
 {
-    Open = 0,
-    InProgress = 1,
-    Finished = 2,
-    Canceled = 3
+    Open = 1,
+    InProgress = 2,
+    Finished = 3
 
 }
