@@ -5,9 +5,11 @@ namespace OsService.Infrastructure.Migrations;
 [Migration(20260111003)]
 public class CreateAttachmentsTable : Migration
 {
+    private const string TableName = "ServiceOrderAttachments";
+
     public override void Up()
     {
-        Create.Table("ServiceOrderAttachments")
+        Create.Table(TableName)
             .WithColumn("Id").AsGuid().PrimaryKey("PK_Attachments")
             .WithColumn("ServiceOrderId").AsGuid().NotNullable()
                 .ForeignKey("FK_ServiceOrderAttachments_ServiceOrders", "ServiceOrders", "Id")
@@ -19,12 +21,12 @@ public class CreateAttachmentsTable : Migration
             .WithColumn("UploadedAt").AsDateTime().NotNullable();
 
         Create.Index("IX_Attachments_ServiceOrderId")
-            .OnTable("ServiceOrderAttachments")
+            .OnTable(TableName)
             .OnColumn("ServiceOrderId")
             .Ascending();
 
         Create.Index("IX_Attachments_ServiceOrderId_AttachmentType")
-            .OnTable("ServiceOrderAttachments")
+            .OnTable(TableName)
             .OnColumn("ServiceOrderId")
             .Ascending()
             .OnColumn("AttachmentType")
@@ -33,6 +35,6 @@ public class CreateAttachmentsTable : Migration
 
     public override void Down()
     {
-        Delete.Table("ServiceOrderAttachments");
+        Delete.Table(TableName);
     }
 }

@@ -11,35 +11,27 @@ public sealed class OpenServiceOrderHandler(
     ILogger<OpenServiceOrderHandler> logger
 ) : IRequestHandler<OpenServiceOrderCommand, (Guid Id, int Number)>
 {
-    public async Task<(Guid Id, int Number)> Handle(OpenServiceOrderCommand request, CancellationToken ct)
+    public async Task<(Guid Id, int Number)> Handle(OpenServiceOrderCommand request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Opening service order for customer: {CustomerId}", request.CustomerId);
 
-        try
+        var exists = await customers.ExistsAsync(request.CustomerId, cancellationToken);
+        if (!exists)
         {
-            var exists = await customers.ExistsAsync(request.CustomerId, ct);
-            if (!exists)
-            {
-                logger.LogWarning("Service order creation failed: Customer not found - {CustomerId}", request.CustomerId);
-                throw new KeyNotFoundException("Customer not found.");
-            }
-
-            var serviceOrder = ServiceOrderEntity.Open(
-                customerId: request.CustomerId,
-                description: request.Description
-            );
-
-            var (id, number) = await serviceOrders.InsertAndReturnNumberAsync(serviceOrder, ct);
-
-            logger.LogInformation("Service order opened successfully - Id: {ServiceOrderId}, Number: {ServiceOrderNumber}, CustomerId: {CustomerId}",
-                id, number, request.CustomerId);
-
-            return (id, number);
+            logger.LogWarning("Service order creation failed: Customer not found - {CustomerId}", request.CustomerId);
+            throw new KeyNotFoundException("Customer not found.");
         }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning("Service order creation failed: {Message}", ex.Message);
-            throw;
-        }
+
+        var serviceOrder = ServiceOrderEntity.Open(
+            customerId: request.CustomerId,
+            description: request.Description
+        );
+
+        var (id, number) = await serviceOrders.InsertAndReturnNumberAsync(serviceOrder, cancellationToken);
+
+        logger.LogInformation("Service order opened successfully - Id: {ServiceOrderId}, Number: {ServiceOrderNumber}, CustomerId: {CustomerId}",
+            id, number, request.CustomerId);
+
+        return (id, number);
     }
 }

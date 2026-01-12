@@ -13,9 +13,9 @@ public sealed class UploadAttachmentHandler(
     private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png" };
     private const long MaxFileSizeBytes = 5 * 1024 * 1024; // 5MB
 
-    public async Task<Guid> Handle(UploadAttachmentCommand request, CancellationToken ct)
+    public async Task<Guid> Handle(UploadAttachmentCommand request, CancellationToken cancellationToken)
     {
-        var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, ct);
+        var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, cancellationToken);
         if (serviceOrder is null)
             throw new KeyNotFoundException("Service order not found.");
 
@@ -45,7 +45,7 @@ public sealed class UploadAttachmentHandler(
 
         await using (var fileStream = new FileStream(storagePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, useAsync: true))
         {
-            await request.FileStream.CopyToAsync(fileStream, ct);
+            await request.FileStream.CopyToAsync(fileStream, cancellationToken);
         }
 
         var attachment = new ServiceOrderAttachment
@@ -60,7 +60,7 @@ public sealed class UploadAttachmentHandler(
             UploadedAt = DateTime.UtcNow
         };
 
-        await attachments.InsertAsync(attachment, ct);
+        await attachments.InsertAsync(attachment, cancellationToken);
 
         return attachmentId;
     }

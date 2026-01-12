@@ -7,13 +7,13 @@ namespace OsService.Services.V1.ListServiceOrders;
 public sealed class ListServiceOrdersHandler(IServiceOrderRepository repo)
     : IRequestHandler<ListServiceOrdersQuery, IEnumerable<ServiceOrderEntity>>
 {
-    public async Task<IEnumerable<ServiceOrderEntity>> Handle(ListServiceOrdersQuery request, CancellationToken ct)
+    public async Task<IEnumerable<ServiceOrderEntity>> Handle(ListServiceOrdersQuery request, CancellationToken cancellationToken)
     {
         return await repo.ListAsync(
             request.CustomerId,
             request.Status,
             request.FromDate,
             request.ToDate,
-            ct);
+            cancellationToken);
     }
 }

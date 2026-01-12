@@ -6,9 +6,9 @@ namespace OsService.Services.V1.UpdateServiceOrderPrice;
 public sealed class UpdateServiceOrderPriceHandler(IServiceOrderRepository serviceOrders)
     : IRequestHandler<UpdateServiceOrderPriceCommand>
 {
-    public async Task Handle(UpdateServiceOrderPriceCommand request, CancellationToken ct)
+    public async Task Handle(UpdateServiceOrderPriceCommand request, CancellationToken cancellationToken)
     {
-        var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, ct);
+        var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, cancellationToken);
 
         if (serviceOrder is null)
             throw new KeyNotFoundException("Service order not found.");
@@ -19,6 +19,6 @@ public sealed class UpdateServiceOrderPriceHandler(IServiceOrderRepository servi
             request.ServiceOrderId,
             serviceOrder.Price!.Value,
             serviceOrder.UpdatedPriceAt!.Value,
-            ct);
+            cancellationToken);
     }
 }

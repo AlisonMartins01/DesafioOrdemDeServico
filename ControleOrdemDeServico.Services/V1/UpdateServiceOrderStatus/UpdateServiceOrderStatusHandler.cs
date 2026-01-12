@@ -10,12 +10,12 @@ public sealed class UpdateServiceOrderStatusHandler(
     ILogger<UpdateServiceOrderStatusHandler> logger)
     : IRequestHandler<UpdateServiceOrderStatusCommand>
 {
-    public async Task Handle(UpdateServiceOrderStatusCommand request, CancellationToken ct)
+    public async Task Handle(UpdateServiceOrderStatusCommand request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Updating status for service order: {ServiceOrderId} to {NewStatus}",
             request.ServiceOrderId, request.NewStatus);
 
-        var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, ct);
+        var serviceOrder = await serviceOrders.GetByIdAsync(request.ServiceOrderId, cancellationToken);
 
         if (serviceOrder is null)
         {
@@ -25,24 +25,16 @@ public sealed class UpdateServiceOrderStatusHandler(
 
         var currentStatus = serviceOrder.Status;
 
-        try
-        {
-            serviceOrder.ChangeStatus(request.NewStatus);
+        serviceOrder.ChangeStatus(request.NewStatus);
 
-            await serviceOrders.UpdateStatusAsync(
-                request.ServiceOrderId,
-                serviceOrder.Status,
-                serviceOrder.StartedAt,
-                serviceOrder.FinishedAt,
-                ct);
+        await serviceOrders.UpdateStatusAsync(
+            request.ServiceOrderId,
+            serviceOrder.Status,
+            serviceOrder.StartedAt,
+            serviceOrder.FinishedAt,
+            cancellationToken);
 
-            logger.LogInformation("Service order status updated successfully - Id: {ServiceOrderId}, Status: {CurrentStatus} -> {NewStatus}",
-                request.ServiceOrderId, currentStatus, request.NewStatus);
-        }
-        catch (InvalidOperationException ex)
-        {
-            logger.LogWarning("Status update failed: {Message}", ex.Message);
-            throw;
-        }
+        logger.LogInformation("Service order status updated successfully - Id: {ServiceOrderId}, Status: {CurrentStatus} -> {NewStatus}",
+            request.ServiceOrderId, currentStatus, request.NewStatus);
     }
 }

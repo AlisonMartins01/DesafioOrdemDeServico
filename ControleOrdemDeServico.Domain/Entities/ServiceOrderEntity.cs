@@ -100,6 +100,10 @@ public sealed class ServiceOrderEntity
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Style",
+        "S107:Methods should not have too many parameters",
+        Justification = "Método de reconstituição DDD que mapeia todas as propriedades da entidade vindas do banco de dados")]
     public static ServiceOrderEntity Reconstitute(
         Guid id,
         int number,
